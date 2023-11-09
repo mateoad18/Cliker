@@ -45,7 +45,6 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:onClick="mejora3"
                 android:text="Billetes"
                 android:textSize="20dp"
                 android:textStyle="bold" />
@@ -87,7 +86,7 @@
         app:srcCompat="@drawable/tienda2" />
 
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/contador"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="TextView"

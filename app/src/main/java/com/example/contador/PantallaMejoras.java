@@ -4,9 +4,14 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class PantallaMejoras extends AppCompatActivity {
     Button volver;
@@ -26,10 +31,18 @@ public class PantallaMejoras extends AppCompatActivity {
         boton = (Button) findViewById(R.id.comprar);
         boton2 = (Button) findViewById(R.id.tiempo);
         volver=(Button) findViewById(R.id.Volver);
+        contador=(TextView) findViewById(R.id.contador);
+        tiempoIncremento();
+        Intent i =  getIntent();
+        variable=getIntent().getIntExtra("VariableV",0);
+        num = getIntent().getDoubleExtra("contador", 0.0);
+        contador.setText(String.valueOf(num));
         volver.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent i = new Intent(PantallaMejoras.this,MainActivity.class);
+                i.putExtra("contadorV",num);
+                i.putExtra("Variable",variable);
                 startActivity(i);
             }
         });
@@ -52,5 +65,23 @@ public class PantallaMejoras extends AppCompatActivity {
             coste= coste+20;
             boton.setText(coste+"coins");
         }
+    }public void tiempoIncremento(){
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        Handler handler = new Handler(Looper.getMainLooper());
+        executor.execute(() -> {
+            //Background work here
+            while (true) {
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+                num += incremento;
+                handler.post(() -> {
+                    //UI Thread work here
+                    contador.setText(String.valueOf(num));
+                });
+            }
+        });
     }
 }

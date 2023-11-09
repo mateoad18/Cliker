@@ -21,7 +21,6 @@ public class MainActivity extends AppCompatActivity {
 
     TextView contador;
     ImageView moneda;
-    Button boton;
     Button tienda;
     double num;
     int variable=1;
@@ -35,11 +34,15 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         tienda=(Button) findViewById(R.id.Tienda);
         contador=(TextView) findViewById(R.id.textocontador);
-        boton = (Button) findViewById(R.id.comprar);
         moneda = (ImageView) findViewById(R.id.coin2);
-        tiempoIncremento();
         Intent i = new Intent(MainActivity.this,PantallaMejoras.class);
         i.putExtra("coins",num);
+        num = getIntent().getDoubleExtra("contadorV", 0.0);
+        variable=getIntent().getIntExtra("Variable",0);
+        if (variable<1){
+            variable=1;
+        }
+        contador.setText(String.valueOf(num));
     }
 
     public void sumar (View v) {
@@ -63,40 +66,14 @@ public class MainActivity extends AppCompatActivity {
         fade_in.setDuration(100);
         moneda.startAnimation(fade_in);
     }
-
-
-
-
-
-    public void mejora3(View v){
-        variable++;
-    }
-    public void tiempoIncremento(){
-        ExecutorService executor = Executors.newSingleThreadExecutor();
-        Handler handler = new Handler(Looper.getMainLooper());
-        executor.execute(() -> {
-            //Background work here
-            while (true) {
-                try {
-                    Thread.sleep(1000);
-                    } catch (InterruptedException e) {
-                        throw new RuntimeException(e);
-                    }
-                    num += incremento;
-                handler.post(() -> {
-                    //UI Thread work here
-                    contador.setText(String.valueOf(num));
-                });
-            }
-        });
-    }
-
     public void volver(View v){
         Intent i = new Intent(MainActivity.this,PantallaInicio.class);
         startActivity(i);
     }
     public void Tienda(View v){
         Intent i = new Intent(MainActivity.this,PantallaMejoras.class);
+        i.putExtra("contador", num);
+        i.putExtra("VariableV",variable);
         startActivity(i);
     }
 }
