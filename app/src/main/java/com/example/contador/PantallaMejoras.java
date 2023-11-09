@@ -32,28 +32,22 @@ public class PantallaMejoras extends AppCompatActivity {
         boton2 = (Button) findViewById(R.id.tiempo);
         volver=(Button) findViewById(R.id.Volver);
         contador=(TextView) findViewById(R.id.contador);
-        tiempoIncremento();
-        Intent i =  getIntent();
+        coste = getIntent().getIntExtra("costev",coste);
+        coste2=getIntent().getIntExtra("coste2V",coste2);
         variable=getIntent().getIntExtra("VariableV",0);
         num = getIntent().getDoubleExtra("contador", 0.0);
+        incremento=getIntent().getIntExtra("incV",0);
         contador.setText(String.valueOf(num));
-        volver.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent i = new Intent(PantallaMejoras.this,MainActivity.class);
-                i.putExtra("contadorV",num);
-                i.putExtra("Variable",variable);
-                startActivity(i);
-            }
-        });
+        boton2.setText(coste2 + " coins");
+        boton.setText(coste + " coins");
+        tiempoIncremento();
     }
     public void aumTiempo(View v){
         if(num>=coste2){
-            num = num-coste2;
-            incremento++;
-            contador.setText(""+num);
-            coste2= coste2+20;
+            num -= coste2;
+            coste2 += 20;
             boton2.setText(coste2+"coins");
+            incremento++;
         }
     }
     public void mejora1 (View v){
@@ -62,14 +56,14 @@ public class PantallaMejoras extends AppCompatActivity {
             num = num-coste;
             variable++;
             contador.setText(""+num);
-            coste= coste+20;
+            coste += 20;
             boton.setText(coste+"coins");
         }
-    }public void tiempoIncremento(){
+    }
+    public void tiempoIncremento(){
         ExecutorService executor = Executors.newSingleThreadExecutor();
         Handler handler = new Handler(Looper.getMainLooper());
         executor.execute(() -> {
-            //Background work here
             while (true) {
                 try {
                     Thread.sleep(1000);
@@ -78,10 +72,20 @@ public class PantallaMejoras extends AppCompatActivity {
                 }
                 num += incremento;
                 handler.post(() -> {
-                    //UI Thread work here
+
                     contador.setText(String.valueOf(num));
                 });
             }
         });
+    }
+
+    public void atras(View view) {
+        Intent i = new Intent(PantallaMejoras.this,MainActivity.class);
+        i.putExtra("contadorV",num);
+        i.putExtra("Variable",variable);
+        i.putExtra("coste",coste);
+        i.putExtra("coste2",coste2);
+        i.putExtra("inc",incremento);
+        startActivity(i);
     }
 }

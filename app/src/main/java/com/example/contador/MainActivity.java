@@ -28,6 +28,9 @@ public class MainActivity extends AppCompatActivity {
     double millones;
     int incremento =0;
 
+    int coste= 100;
+    int coste2 = 200;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,11 +40,12 @@ public class MainActivity extends AppCompatActivity {
         moneda = (ImageView) findViewById(R.id.coin2);
         Intent i = new Intent(MainActivity.this,PantallaMejoras.class);
         i.putExtra("coins",num);
+        incremento=getIntent().getIntExtra("inc",0);
+        coste=getIntent().getIntExtra("coste",coste);
+        coste2=getIntent().getIntExtra("coste2",coste2);
         num = getIntent().getDoubleExtra("contadorV", 0.0);
-        variable=getIntent().getIntExtra("Variable",0);
-        if (variable<1){
-            variable=1;
-        }
+        variable=getIntent().getIntExtra("Variable",variable);
+        tiempoIncremento();
         contador.setText(String.valueOf(num));
     }
 
@@ -70,10 +74,33 @@ public class MainActivity extends AppCompatActivity {
         Intent i = new Intent(MainActivity.this,PantallaInicio.class);
         startActivity(i);
     }
+
+    public void tiempoIncremento(){
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        Handler handler = new Handler(Looper.getMainLooper());
+        executor.execute(() -> {
+            while (true) {
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+                num += incremento;
+                handler.post(() -> {
+
+                    contador.setText(String.valueOf(num));
+                });
+            }
+        });
+    }
     public void Tienda(View v){
         Intent i = new Intent(MainActivity.this,PantallaMejoras.class);
         i.putExtra("contador", num);
         i.putExtra("VariableV",variable);
+        i.putExtra("costev",coste);
+        i.putExtra("coste2V",coste2);
+        i.putExtra("incV",incremento);
         startActivity(i);
     }
+
 }
