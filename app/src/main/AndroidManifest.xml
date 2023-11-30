@@ -13,6 +13,9 @@
         android:theme="@style/Theme.Contador"
         tools:targetApi="31">
         <activity
+            android:name=".Login"
+            android:exported="false" />
+        <activity
             android:name=".PantallaMejoras"
             android:exported="false" />
         <activity
